@@ -11,12 +11,13 @@ class PhoneBook
         bool ParseCommand(std::string input);
         void Add();
         void Search();
-        int GetLength();
+        size_t GetLength();
         void IncreasePosition();
         int GetPosition();
 
     private:
         void InputPhone();
+        bool PrintSearch();
 
     private:
         PhoneObject phoneBook[8];
@@ -26,7 +27,7 @@ class PhoneBook
 #endif
 
 inline PhoneBook::PhoneBook(){}
-inline int PhoneBook::GetLength() { return std::size(phoneBook); }
+inline size_t PhoneBook::GetLength() { return std::size(phoneBook); }
 inline void PhoneBook::IncreasePosition()
 { 
     position++;

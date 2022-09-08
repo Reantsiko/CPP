@@ -20,27 +20,18 @@ void PhoneBook::Add()
 void PhoneBook::Search()
 {
     int position;
-    std::cout << "Input an index number:\n";
     std::string input;
+    if (!PrintSearch())
+        return;
+    std::cout << "Input an index number\n";
     std::cin >> input;
-    for (size_t i = 0; i < std::size(input); i++)
-    {
-        if (input[i] < '0' || input[i] > '9')
-        {
-            std::cout << "Incorrect input, requires number\n";
-            return;
-        }
-    }
-    position = stoi(input) - 1;
+    position = stoi(input);
     if (position >= 8 || position <= -1)
     {
-        std::cout << "Invalid input, number has to be between 1 and 8\n";
+        std::cout << "Invalid input, number has to be between 0 and 7\n";
         return;
     }
-    if (!phoneBook[position].firstName.empty())
-        std::cout << phoneBook[position].firstName << "\n" << phoneBook[position].lastName << "\n" << phoneBook[position].nickname << '\n';
-    else
-        std::cout << "No input on this index\n";
+    phoneBook[position].PrintInfo();
 }
 
 void PhoneBook::InputPhone()
@@ -55,4 +46,23 @@ void PhoneBook::InputPhone()
     std::cin >> phoneBook[GetPosition()].phone;
     std::cout << "Input Darkest Secret:\n";
     std::cin >> phoneBook[GetPosition()].darkestSecret;
+}
+
+bool PhoneBook::PrintSearch()
+{
+    size_t index = 0;
+    size_t len = GetLength();
+    while (index < len)
+    {
+        if (!phoneBook[index].IsFilled())
+            break;
+        phoneBook[index].PrintColumns(index);
+        index++;
+    }
+    if (index == 0 && !phoneBook[0].IsFilled())
+    {
+        std::cout << "Phonebook is empty!\n";
+        return false;
+    }
+    return true;
 }
