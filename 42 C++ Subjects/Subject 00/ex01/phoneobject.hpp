@@ -1,5 +1,5 @@
-#ifndef PHONEOBJECT_H
-#define PHONEOBJECT_H
+#ifndef PHONEOBJECT_HPP
+#define PHONEOBJECT_HPP
 
 #include <iostream>
 #include <string>
