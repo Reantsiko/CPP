@@ -1,3 +1,5 @@
+#include <iostream>
+#include <string>
 #include "phonebook.h"
 
 bool PhoneBook::ParseCommand(std::string input)
@@ -44,7 +46,7 @@ void PhoneBook::InputPhone()
     std::cin >> phoneBook[GetPosition()].nickname;
     std::cout << "Input Phone:\n";
     std::cin >> phoneBook[GetPosition()].phone;
-    std::cout << "Input Darkest Secret:\n";
+    std::cout << "Input Darkest Secret: ";
     std::cin >> phoneBook[GetPosition()].darkestSecret;
 }
 
