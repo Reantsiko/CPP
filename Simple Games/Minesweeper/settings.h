@@ -10,21 +10,8 @@ class Settings
         int blockAmount;
     
     public:
-        Settings(int x, int y);
+        Settings(int x, int y, int bSize);
         ~Settings();
 };
-
-inline Settings::Settings(int x, int y)
-{
-    xSize = x;
-    ySize = y;
-    blockSize = 10;
-    blockAmount = 50;
-}
-
-inline Settings::~Settings()
-{
-
-}
 
 #endif

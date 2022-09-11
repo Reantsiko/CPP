@@ -6,8 +6,27 @@
 
 // PUBLIC
 
+Block::Block(int x, int y, bool bomb, int bSize)
+{
+    state = hidden;
+    xCoord = x;
+    yCoord = y;
+    isBomb = bomb;
+    blockSize = bSize;
+    if (!bomb)
+    {
+        // check blocks around
+    }
+}
+
+Block::~Block()
+{
+    delete (blocksAround);
+}
+
 void Block::DrawBlock()
 {
+    DrawBorders();
     switch (state)
     {
         case hidden:
@@ -21,41 +40,49 @@ void Block::DrawBlock()
 
 void Block::ClickBlock()
 {
-    
+
 }
 
 void Block::FlagBlock()
 {
-    for (int i = 0; i < yCoord; i++)
-        DrawLine(xCoord, yCoord + i, xCoord + settings->blockSize, yCoord + i, LIGHTGRAY);
-    DrawText("F", xCoord, yCoord, settings->blockSize / 2, BLUE);
+    for (int i = 0; i < blockSize; i++)
+        DrawLine(xCoord, yCoord + i, xCoord + blockSize, yCoord + i, LIGHTGRAY);
+    DrawText("F", xCoord, yCoord, blockSize / 2, BLUE);
 }
 
 // PRIVATE
 
+void Block::DrawBorders()
+{
+    DrawLine(xCoord - 1, yCoord - 1, xCoord - 1, yCoord + blockSize + 1, LIGHTGRAY); // left
+    DrawLine(xCoord + blockSize+ 1, yCoord - 1, xCoord + blockSize+ 1, yCoord + blockSize + 1, LIGHTGRAY); // right
+    DrawLine(xCoord - 1, yCoord - 1, xCoord + blockSize + 1, yCoord - 1, LIGHTGRAY); // top
+    DrawLine(xCoord - 1, yCoord + blockSize + 1, xCoord + blockSize + 1, yCoord + blockSize + 1, LIGHTGRAY); // bottom
+}
+
 void Block::HiddenBlock()
 {
-    for (int i = 0; i < yCoord; i++)
-        DrawLine(xCoord, yCoord + i, xCoord + settings->blockSize, yCoord + i, GRAY);
+    for (int i = 0; i < blockSize; i++)
+        DrawLine(xCoord, yCoord + i, xCoord + blockSize, yCoord + i, GRAY);
 }
 
 void Block::RevealedBlock()
 {
-    for (int i = 0; i < yCoord; i++)
-        DrawLine(xCoord, yCoord + i, xCoord + settings->blockSize, yCoord + i, LIGHTGRAY);
+    for (int i = 0; i < blockSize; i++)
+        DrawLine(xCoord, yCoord + i, xCoord + blockSize, yCoord + i, LIGHTGRAY);
     if (isBomb == false && bombsAround == 0) return;
     if (isBomb)
     {
-        DrawText("B", xCoord, yCoord, settings->blockSize / 2, RED);
+        DrawText("B", xCoord, yCoord, blockSize / 2, RED);
         return;
     }
     char* text = new char(2);
     text[0] = bombsAround + '0';
     text[1] = '\0';
-    DrawText(text, xCoord, yCoord, settings->blockSize / 2, BLUE);
+    DrawText(text, xCoord, yCoord, blockSize / 2, BLUE);
 }
 
 void Block::FlaggedBlock()
 {
-    DrawLine(xCoord, yCoord, xCoord + settings->blockSize, yCoord + settings->blockSize, BLACK);
+    DrawLine(xCoord, yCoord, xCoord + blockSize, yCoord + blockSize, BLACK);
 }

@@ -15,12 +15,14 @@ class Block
         bool isBomb;
         int bombsAround;
         Block *blocksAround;
-        Settings *settings;
+        int blockSize;
 
     public:
-        Block(int x, int y, bool bomb, Settings *toSet);
+        Block();
+        Block(int x, int y, bool bomb, int bSize);
         ~Block();
         bool GetIsBomb();
+        void DrawBorders();
         void DrawBlock();
         void ClickBlock();
         void FlagBlock();
@@ -32,23 +34,7 @@ class Block
 
 };
 
-inline Block::Block(int x, int y, bool bomb, Settings *toSet)
-{
-    state = hidden;
-    xCoord = x;
-    yCoord = y;
-    isBomb = bomb;
-    settings = toSet;
-    if (!bomb)
-    {
-        // check blocks around
-    }
-}
-
-inline Block::~Block()
-{
-    delete (blocksAround);
-}
+inline Block::Block(){}
 
 inline bool Block::GetIsBomb()
 {
