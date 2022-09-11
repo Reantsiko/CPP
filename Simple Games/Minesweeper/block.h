@@ -14,7 +14,7 @@ class Block
         int yCoord;
         bool isBomb;
         int bombsAround;
-        Block *blocksAround;
+        Block *blocksAround = nullptr;
         int blockSize;
 
     public:

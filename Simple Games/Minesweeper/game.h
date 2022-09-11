@@ -2,24 +2,19 @@
 #define GAME_H
 
 #include "settings.h"
-#include "block.h"
+#include "session.h"
 class Game
 {
     public:
         Settings *settings;
-        Block ***block;
-
-    private:
-        int rows;
-        int columns;
+        Session *session;
 
     public:
-        Game(int rows, int columns);
+        Game();
         ~Game();
         void Play();
     private:
         void PaintBackground();
-        void PaintBlocks();
 };
 
 #endif

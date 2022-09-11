@@ -21,7 +21,8 @@ Block::Block(int x, int y, bool bomb, int bSize)
 
 Block::~Block()
 {
-    delete (blocksAround);
+    if (blocksAround != nullptr)
+        delete (blocksAround);
 }
 
 void Block::DrawBlock()

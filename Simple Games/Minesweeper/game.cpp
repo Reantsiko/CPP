@@ -3,22 +3,17 @@
 #include "game.h"
 #include <iostream>
 
-Game::Game(int rows, int columns)
+Game::Game()
 {
-    this->rows = rows;
-    this->columns = columns;
     this->settings = new Settings(250, 300, 15);
-    block = new Block**[columns]();
-    for (int i = 0; i < 5; i++)
-        block[i] = new Block*[rows];
-    for (int c = 0; c < columns; c++)
-        for (int r = 0; r < rows; r++)
-            block[r][c] = new Block(50 + ((settings->blockSize + 2) * r), 50 + ((settings->blockSize + 2) * c), false, settings->blockSize);
+    this->session = new Session(6,6, this->settings->blockSize);
 }
 
 Game::~Game()
 {
     delete(settings);
+    if (session != nullptr)
+        delete (session);
 }
 
 void Game::Play()
@@ -28,7 +23,8 @@ void Game::Play()
     while (!WindowShouldClose())
     {
         PaintBackground();
-        PaintBlocks();
+        if (session != nullptr)
+            session->PaintBlocks();
     }
 }
 
@@ -37,16 +33,4 @@ void Game::PaintBackground()
     BeginDrawing();
     ClearBackground(Color{191,179,204,255});
     EndDrawing();
-}
-
-void Game::PaintBlocks()
-{
-    if (block == nullptr)
-    {
-        std::cout << "Block is null\n";
-        return;
-    }
-    for (int c = 0; c < columns; c++)
-        for (int r = 0; r < rows; r++)
-            block[r][c]->DrawBlock();
 }
