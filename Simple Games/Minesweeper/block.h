@@ -14,7 +14,8 @@ class Block
         int yCoord;
         bool isBomb;
         int bombsAround;
-        Block *blocksAround = nullptr;
+        int blocksAroundCount = 0;
+        Block **blocksAround = nullptr;
         int blockSize;
 
     public:
@@ -22,9 +23,11 @@ class Block
         Block(int x, int y, bool bomb, int bSize);
         ~Block();
         bool GetIsBomb();
+        void SetBlockAround(int max, Block **toSet);
+        int GetBomsAround();
         void DrawBorders();
         void DrawBlock();
-        void ClickBlock();
+        void RevealNeighbouringBlocks();
         void FlagBlock();
     
     private:
@@ -33,6 +36,17 @@ class Block
         void FlaggedBlock();
 
 };
+
+inline void Block::SetBlockAround(int max, Block **toSet)
+{
+    blocksAroundCount = max;
+    blocksAround = toSet;
+}
+
+inline int Block::GetBomsAround()
+{
+    return bombsAround;
+}
 
 inline Block::Block(){}
 

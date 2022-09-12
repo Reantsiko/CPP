@@ -16,26 +16,18 @@ class Session
         Session(int rows, int columns, int blockSize);
         ~Session();
         void PaintBlocks();
+        int GetRows();
+        int GetColumns();
 };
 
-inline Session::Session(int rows, int columns, int blockSize)
+inline int Session::GetRows()
 {
-    this->rows = rows;
-    this->columns = columns;
-    block = new Block**[columns]();
-    for (int i = 0; i < columns; i++)
-        block[i] = new Block*[rows];
-    for (int c = 0; c < columns; c++)
-        for (int r = 0; r < rows; r++)
-            block[r][c] = new Block(50 + ((blockSize + 2) * r), 50 + ((blockSize + 2) * c), false, blockSize);
+    return rows;
 }
 
-inline Session::~Session()
+inline int Session::GetColumns()
 {
-    for (int c = 0; c < columns; c++)
-        for (int r = 0; r < rows; r++)
-            delete(block[r][c]);
-    delete(block);
+    return columns;
 }
 
 #endif

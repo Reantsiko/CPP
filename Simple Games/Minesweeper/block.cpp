@@ -13,6 +13,7 @@ Block::Block(int x, int y, bool bomb, int bSize)
     yCoord = y;
     isBomb = bomb;
     blockSize = bSize;
+    bombsAround = 0;
     if (!bomb)
     {
         // check blocks around
@@ -28,6 +29,7 @@ Block::~Block()
 void Block::DrawBlock()
 {
     DrawBorders();
+    
     switch (state)
     {
         case hidden:
@@ -39,9 +41,21 @@ void Block::DrawBlock()
     }
 }
 
-void Block::ClickBlock()
+void Block::RevealNeighbouringBlocks()
 {
-
+    if (blocksAround != nullptr && bombsAround == 0)
+    {
+        for (int i = 0; i < blocksAroundCount; i++)
+        {
+            if (blocksAround[i]->state != revealed && blocksAround[i]->bombsAround == 0)
+            {
+                blocksAround[i]->state = revealed;
+                blocksAround[i]->RevealNeighbouringBlocks();
+            }
+        }
+    }
+    else
+        std::cout << "Blocksaround is null\n";
 }
 
 void Block::FlagBlock()
@@ -63,14 +77,14 @@ void Block::DrawBorders()
 
 void Block::HiddenBlock()
 {
-    for (int i = 0; i < blockSize; i++)
-        DrawLine(xCoord, yCoord + i, xCoord + blockSize, yCoord + i, GRAY);
+    DrawRectangle(xCoord, yCoord, blockSize, blockSize, GRAY);
 }
 
 void Block::RevealedBlock()
 {
-    for (int i = 0; i < blockSize; i++)
-        DrawLine(xCoord, yCoord + i, xCoord + blockSize, yCoord + i, LIGHTGRAY);
+    DrawRectangle(xCoord, yCoord, blockSize, blockSize, LIGHTGRAY);
+    // for (int i = 0; i < blockSize; i++)
+    //     DrawLine(xCoord, yCoord + i, xCoord + blockSize, yCoord + i, );
     if (isBomb == false && bombsAround == 0) return;
     if (isBomb)
     {
@@ -80,10 +94,11 @@ void Block::RevealedBlock()
     char* text = new char(2);
     text[0] = bombsAround + '0';
     text[1] = '\0';
-    DrawText(text, xCoord, yCoord, blockSize / 2, BLUE);
+    DrawText(text, xCoord, yCoord, blockSize, BLUE);
 }
 
 void Block::FlaggedBlock()
 {
-    DrawLine(xCoord, yCoord, xCoord + blockSize, yCoord + blockSize, BLACK);
+    DrawRectangle(xCoord, yCoord, blockSize, blockSize, LIGHTGRAY);
+    DrawText("F", xCoord, yCoord, blockSize / 2, RED);
 }
