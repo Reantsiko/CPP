@@ -6,18 +6,13 @@
 
 // PUBLIC
 
-Block::Block(int x, int y, bool bomb, int bSize)
+Block::Block(int x, int y, int bSize)
 {
     state = hidden;
     xCoord = x;
     yCoord = y;
-    isBomb = bomb;
     blockSize = bSize;
     bombsAround = 0;
-    if (!bomb)
-    {
-        // check blocks around
-    }
 }
 
 Block::~Block()
@@ -41,16 +36,24 @@ void Block::DrawBlock()
     }
 }
 
+void Block::RevealBlock()
+{
+    state = revealed;
+    if (bombsAround == 0)
+        RevealNeighbouringBlocks();
+}
+
 void Block::RevealNeighbouringBlocks()
 {
     if (blocksAround != nullptr && bombsAround == 0)
     {
         for (int i = 0; i < blocksAroundCount; i++)
         {
-            if (blocksAround[i]->state != revealed && blocksAround[i]->bombsAround == 0)
+            if (blocksAround[i]->state != revealed)
             {
                 blocksAround[i]->state = revealed;
-                blocksAround[i]->RevealNeighbouringBlocks();
+                if (blocksAround[i]->bombsAround == 0)
+                    blocksAround[i]->RevealNeighbouringBlocks();
             }
         }
     }

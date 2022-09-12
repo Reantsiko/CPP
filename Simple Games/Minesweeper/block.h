@@ -12,7 +12,7 @@ class Block
     private:
         int xCoord;
         int yCoord;
-        bool isBomb;
+        bool isBomb = false;
         int bombsAround;
         int blocksAroundCount = 0;
         Block **blocksAround = nullptr;
@@ -20,20 +20,22 @@ class Block
 
     public:
         Block();
-        Block(int x, int y, bool bomb, int bSize);
+        Block(int x, int y, int bSize);
         ~Block();
         bool GetIsBomb();
         void SetBlockAround(int max, Block **toSet);
         int GetBomsAround();
         void DrawBorders();
         void DrawBlock();
-        void RevealNeighbouringBlocks();
+        void RevealBlock();
         void FlagBlock();
+        void SetBomb();
     
     private:
         void HiddenBlock();
         void RevealedBlock();
         void FlaggedBlock();
+        void RevealNeighbouringBlocks();
 
 };
 
@@ -41,6 +43,11 @@ inline void Block::SetBlockAround(int max, Block **toSet)
 {
     blocksAroundCount = max;
     blocksAround = toSet;
+}
+
+inline void Block::SetBomb()
+{
+    isBomb = true;
 }
 
 inline int Block::GetBomsAround()
