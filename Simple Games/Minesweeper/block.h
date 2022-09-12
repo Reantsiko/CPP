@@ -23,7 +23,7 @@ class Block
         Block(int x, int y, int bSize);
         ~Block();
         bool GetIsBomb();
-        void SetBlockAround(int max, Block **toSet);
+        void SetBlockAround(int max, int bombs, Block **toSet);
         int GetBomsAround();
         void DrawBorders();
         void DrawBlock();
@@ -39,9 +39,10 @@ class Block
 
 };
 
-inline void Block::SetBlockAround(int max, Block **toSet)
+inline void Block::SetBlockAround(int max, int bombs, Block **toSet)
 {
     blocksAroundCount = max;
+    bombsAround = bombs;
     blocksAround = toSet;
 }
 

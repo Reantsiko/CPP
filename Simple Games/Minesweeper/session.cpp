@@ -23,6 +23,8 @@ Session::Session(int rows, int columns, int blockSize)
     for (int c = 0; c < columns; c++)
         for (int r = 0; r < rows; r++)
         {
+            if (block[r][c]->GetIsBomb())
+                continue;
             int max = 8;
             if (r - 1 < 0 || r + 1 >= rows)
                 max -= 3;
@@ -32,6 +34,7 @@ Session::Session(int rows, int columns, int blockSize)
                 max++;
             Block **blocksAround = new Block*[max]();
             int pos = 0;
+            int bombs = 0;
             for (int y = -1; y < 2; y++)
             {
                 for (int x = -1; x < 2; x++)
@@ -41,10 +44,11 @@ Session::Session(int rows, int columns, int blockSize)
                         continue;
                     }
                     blocksAround[pos] = block[r + x][c + y];
+                    bombs += block[r+x][c+y]->GetIsBomb() ? 1 : 0;
                     pos++;
                 }
             }
-            block[r][c]->SetBlockAround(max, blocksAround);
+            block[r][c]->SetBlockAround(max, bombs, blocksAround);
         }
 }
 
