@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 #include "block.h"
-
+#include "session.h"
 // PUBLIC
 
 Block::Block(int x, int y, int bSize)
@@ -36,11 +36,16 @@ void Block::DrawBlock()
     }
 }
 
-void Block::RevealBlock()
+bool Block::RevealBlock()
 {
     state = revealed;
+    if (isBomb)
+    {
+        return true;
+    }
     if (bombsAround == 0)
         RevealNeighbouringBlocks();
+    return false;
 }
 
 void Block::RevealNeighbouringBlocks()
@@ -49,7 +54,7 @@ void Block::RevealNeighbouringBlocks()
     {
         for (int i = 0; i < blocksAroundCount; i++)
         {
-            if (blocksAround[i]->state != revealed)
+            if (blocksAround[i]->state != revealed && blocksAround[i]->state != flagged)
             {
                 blocksAround[i]->state = revealed;
                 if (blocksAround[i]->bombsAround == 0)
@@ -61,11 +66,19 @@ void Block::RevealNeighbouringBlocks()
         std::cout << "Blocksaround is null\n";
 }
 
-void Block::FlagBlock()
+bool Block::FlagBlock(bool canPlace)
 {
-    for (int i = 0; i < blockSize; i++)
-        DrawLine(xCoord, yCoord + i, xCoord + blockSize, yCoord + i, LIGHTGRAY);
-    DrawText("F", xCoord, yCoord, blockSize / 2, BLUE);
+    if (state == flagged)
+    {
+        state = hidden;
+        return false;
+    }
+    if (state == hidden && canPlace)
+    {
+        state = flagged;
+        return true;
+    }
+    return false;
 }
 
 // PRIVATE
@@ -86,22 +99,20 @@ void Block::HiddenBlock()
 void Block::RevealedBlock()
 {
     DrawRectangle(xCoord, yCoord, blockSize, blockSize, LIGHTGRAY);
-    // for (int i = 0; i < blockSize; i++)
-    //     DrawLine(xCoord, yCoord + i, xCoord + blockSize, yCoord + i, );
     if (isBomb == false && bombsAround == 0) return;
     if (isBomb)
     {
-        DrawText("B", xCoord, yCoord, blockSize / 2, RED);
+        DrawText("B", xCoord + blockSize / 4, yCoord + blockSize / 4, blockSize / 2, RED);
         return;
     }
     char* text = new char(2);
     text[0] = bombsAround + '0';
     text[1] = '\0';
-    DrawText(text, xCoord, yCoord, blockSize, BLUE);
+    DrawText(text, xCoord + blockSize / 4, yCoord + blockSize / 4, blockSize / 2, BLUE);
 }
 
 void Block::FlaggedBlock()
 {
-    DrawRectangle(xCoord, yCoord, blockSize, blockSize, LIGHTGRAY);
-    DrawText("F", xCoord, yCoord, blockSize / 2, RED);
+    HiddenBlock();
+    DrawText("F", xCoord + blockSize / 4, yCoord + blockSize / 4, blockSize / 2, RED);
 }

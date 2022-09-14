@@ -7,7 +7,6 @@ class Settings
         int xSize;
         int ySize;
         int blockSize;
-        int blockAmount;
     
     public:
         Settings(int x, int y, int bSize);

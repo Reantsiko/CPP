@@ -27,8 +27,8 @@ class Block
         int GetBomsAround();
         void DrawBorders();
         void DrawBlock();
-        void RevealBlock();
-        void FlagBlock();
+        bool RevealBlock();
+        bool FlagBlock(bool canPlace);
         void SetBomb();
     
     private:

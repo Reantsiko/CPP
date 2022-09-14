@@ -3,10 +3,10 @@
 #include "game.h"
 #include <iostream>
 #include "math.h"
-Game::Game()
+Game::Game(int rows, int columns, int blockSize, int bombAmount)
 {
-    this->settings = new Settings(250, 300, 15);
-    this->session = new Session(6,6, this->settings->blockSize);
+    this->settings = new Settings(50 + (blockSize + 2) * rows, 50 + (blockSize + 2) * columns, blockSize);
+    this->session = new Session(rows, columns, blockSize, bombAmount);
 }
 
 Game::~Game()
@@ -25,22 +25,42 @@ void Game::Play()
         PaintBackground();
         if (session != nullptr)
             session->PaintBlocks();
-        if (IsMouseButtonPressed(0))
+        if (inSession)
         {
-            Vector2 mousePos = GetMousePosition();
-            std::cout << mousePos.x << ' ' << mousePos.y << std::endl;
-            mousePos.x = floor((mousePos.x - 50) / 16);
-            mousePos.y = floor((mousePos.y - 50) / 16);
+            if (IsMouseButtonPressed(0))
+                Click(false);
+            if (IsMouseButtonPressed(1))
+                Click(true);
+        }
+        if (IsKeyPressed(KEY_R))
+        {
+            std::cout << "RESET!";
+            delete(session);
+            session = new Session(15, 5, 16, 15);
+            inSession = true;
+        }
+    }
+}
 
-            if (mousePos.x < session->GetRows() && mousePos.y < session->GetColumns())
+void Game::Click(bool isRightClick)
+{
+    Vector2 blockCoord = GetBlockCoord();
+
+    if ((int)blockCoord.x < session->GetRows() && (int)blockCoord.y < session->GetColumns())
+    {
+            std::cout << "Clicked block\n" << blockCoord.x << " " << blockCoord.y << std::endl;
+            if (isRightClick)
+                session->PlaceFlag(blockCoord.x, blockCoord.y);
+            else
             {
-                if (session->block[(int)mousePos.x][(int)mousePos.y] != nullptr)
+                bool isBomb = session->RevealBlock(blockCoord.x, blockCoord.y);
+                if (isBomb)
                 {
-                    std::cout << "Clicked block\n" << mousePos.x << " " << mousePos.y << std::endl;
-                    session->block[(int)mousePos.x][(int)mousePos.y]->RevealBlock();
+                    session->RevealBombs();
+                    inSession = false;
+                    std::cout << "BOOOOOOOOOM\n";
                 }
             }
-        }
     }
 }
 
@@ -49,4 +69,13 @@ void Game::PaintBackground()
     BeginDrawing();
     ClearBackground(Color{191,179,204,255});
     EndDrawing();
+}
+
+Vector2 Game::GetBlockCoord()
+{
+    Vector2 mousePos = GetMousePosition();
+    std::cout << mousePos.x << ' ' << mousePos.y << std::endl;
+    mousePos.x = floor((mousePos.x - 25) / (settings->blockSize + 2));
+    mousePos.y = floor((mousePos.y - 25) / (settings->blockSize + 2));
+    return mousePos;
 }
