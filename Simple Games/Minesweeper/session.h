@@ -21,11 +21,17 @@ class Session
         void PaintBlocks();
         int GetRows();
         int GetColumns();
+        int GetBombAmount();
         bool RevealBlock(int xCoord, int yCoord);
         void PlaceFlag(int xCoord, int yCoord);
         void RevealBombs();
 
     private:
+        bool IsOutsideBounds(int xPos, int yPos, int row, int column);
+        void InitBlocks(int blockSize);
+        void InitBombs();
+        void IncreaseBombCounter(int xPos, int yPos);
+        void LinkBlocks();
         bool CanPlaceFlag();
 };
 
@@ -39,9 +45,9 @@ inline int Session::GetColumns()
     return columns;
 }
 
-// inline bool Session::CanPlaceFlag()
-// {
-//     return flagsPlaced < bombAmount;
-// }
+inline int Session::GetBombAmount()
+{
+    return bombAmount;
+}
 
 #endif

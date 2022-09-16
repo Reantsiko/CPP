@@ -3,6 +3,11 @@
 #include "game.h"
 #include <iostream>
 #include "math.h"
+
+//
+//  PUBLIC
+//
+
 Game::Game(int rows, int columns, int blockSize, int bombAmount)
 {
     this->settings = new Settings(50 + (blockSize + 2) * rows, 50 + (blockSize + 2) * columns, blockSize);
@@ -35,8 +40,11 @@ void Game::Play()
         if (IsKeyPressed(KEY_R))
         {
             std::cout << "RESET!";
+            int rows = session->GetRows();
+            int columns = session->GetColumns();
+            int bombs = session->GetBombAmount();
             delete(session);
-            session = new Session(15, 5, 16, 15);
+            session = new Session(rows, columns, 16, bombs);
             inSession = true;
         }
     }
@@ -63,6 +71,10 @@ void Game::Click(bool isRightClick)
             }
     }
 }
+
+//
+//  PRIVATE
+//
 
 void Game::PaintBackground()
 {

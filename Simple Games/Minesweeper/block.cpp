@@ -4,7 +4,10 @@
 #include <iostream>
 #include "block.h"
 #include "session.h"
+
+//
 // PUBLIC
+//
 
 Block::Block(int x, int y, int bSize)
 {
@@ -48,24 +51,6 @@ bool Block::RevealBlock()
     return false;
 }
 
-void Block::RevealNeighbouringBlocks()
-{
-    if (blocksAround != nullptr && bombsAround == 0)
-    {
-        for (int i = 0; i < blocksAroundCount; i++)
-        {
-            if (blocksAround[i]->state != revealed && blocksAround[i]->state != flagged)
-            {
-                blocksAround[i]->state = revealed;
-                if (blocksAround[i]->bombsAround == 0)
-                    blocksAround[i]->RevealNeighbouringBlocks();
-            }
-        }
-    }
-    else
-        std::cout << "Blocksaround is null\n";
-}
-
 bool Block::FlagBlock(bool canPlace)
 {
     if (state == flagged)
@@ -81,8 +66,6 @@ bool Block::FlagBlock(bool canPlace)
     return false;
 }
 
-// PRIVATE
-
 void Block::DrawBorders()
 {
     DrawLine(xCoord - 1, yCoord - 1, xCoord - 1, yCoord + blockSize + 1, LIGHTGRAY); // left
@@ -90,6 +73,10 @@ void Block::DrawBorders()
     DrawLine(xCoord - 1, yCoord - 1, xCoord + blockSize + 1, yCoord - 1, LIGHTGRAY); // top
     DrawLine(xCoord - 1, yCoord + blockSize + 1, xCoord + blockSize + 1, yCoord + blockSize + 1, LIGHTGRAY); // bottom
 }
+
+//
+// PRIVATE
+//
 
 void Block::HiddenBlock()
 {
@@ -115,4 +102,22 @@ void Block::FlaggedBlock()
 {
     HiddenBlock();
     DrawText("F", xCoord + blockSize / 4, yCoord + blockSize / 4, blockSize / 2, RED);
+}
+
+void Block::RevealNeighbouringBlocks()
+{
+    if (blocksAround != nullptr && bombsAround == 0)
+    {
+        for (int i = 0; i < blocksAroundCount; i++)
+        {
+            if (blocksAround[i]->state != revealed && blocksAround[i]->state != flagged && !blocksAround[i]->GetIsBomb())
+            {
+                blocksAround[i]->state = revealed;
+                if (blocksAround[i]->bombsAround == 0)
+                    blocksAround[i]->RevealNeighbouringBlocks();
+            }
+        }
+    }
+    else
+        std::cout << "Blocksaround is null\n";
 }
